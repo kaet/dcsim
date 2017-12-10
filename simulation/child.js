@@ -3,7 +3,7 @@
  *
  * dcsim child process, spawned by `dcsim`. This file's sole purpose is to
  * autoload the node behaviour implementation. For defining node behaviour,
- * see the Node class (`node.js`), and example (`examples/CurrencyExchange.js`)
+ * see the Node class (`node.js`), and example (`examples/CenterFade.js`)
  * for assigning behaviour to specific nodes.
  */
 

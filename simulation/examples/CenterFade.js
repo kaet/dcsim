@@ -1,5 +1,5 @@
 /**
- * CurrencyExchange.js
+ * CenterFade.js
  *
  * Basic example of a node implementation.
  */
@@ -9,7 +9,7 @@
 const Node = require('../node')
 const helpers = require('../helpers')
 
-class CurrencyExchange extends Node {
+class CenterFade extends Node {
 
   constructor() {
     super(...arguments)
@@ -33,17 +33,18 @@ class CurrencyExchange extends Node {
   }
 
   onSpread(data) {
-    const value = this.identity.bank / this.identity.neighbours.length + 1
-    this.identity.neighbours.map((neighbour, i) => {
-      this.sendTo('receive', { value }, neighbour)
-    })
+    const _spread = () => {
+      const value = this.identity.bank / this.identity.neighbours.length + 1
+      this.sendTo(neighbour, 'receive', { value })
+    }
+    this.identity.neighbours.map(_spread)
     this.identity.bank = value
     this.update()
   }
 
 }
 
-module.exports =
-  { nodes: helpers.generateRegularNodeList(3, 3, ['CurrencyExchange', __filename])
-  , CurrencyExchange
-  }
+module.exports = {
+  nodes: helpers.generateRegularNodeList(3, 3, ['CenterFade', __filename]),
+  CenterFade
+}

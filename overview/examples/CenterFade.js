@@ -1,12 +1,12 @@
 /**
- * CurrencyExchange.js
+ * CenterFade.js
  *
  * Basic example of a node implementation.
  */
 
 'use strict'
 
-class CurrencyExchange extends NodeRepresentation {
+class CenterFade extends NodeRepresentation {
 
   update(data) {
     this.identity = data

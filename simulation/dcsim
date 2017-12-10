@@ -13,21 +13,19 @@
 
 const child_process = require('child_process')
     , path = require('path')
-    , colors = require('colors')
     , io = require('socket.io')(3008)
 
-io.on('connection', sock => sock.on('*', d => sock.broadcast.emit('*', d)))
+io.on('connection', sock => sock.on('*', obj => sock.broadcast.emit('*', obj)))
 
-const config = require(path.resolve(process.argv.slice(2)[0]))
-const nodes = config.nodes
+const cfg = require(path.resolve(process.argv.slice(2)[0]))
 
-console.log(`Creating ${nodes.length * nodes[0].length} nodes`.magenta)
+console.log(`Creating ${cfg.nodes.length * cfg.nodes[0].length} nodes`)
 
 const fork = identity => {
   const child = child_process.fork(path.resolve('child.js'))
   child.send(identity)
 
-  child.on('message', msg => console.log(`#${identity.id}: ${msg}`.cyan))
-  child.on('close', code => console.log(`#${identity.id}: exit (${code})`.red))
+  child.on('message', msg => console.log(`#${identity.id}: ${msg}`))
+  child.on('close', code => console.log(`#${identity.id}: exit (${code})`))
 }
-nodes.map(arr => arr.map(fork))
+cfg.nodes.map(arr => arr.map(fork))

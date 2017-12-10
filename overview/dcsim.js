@@ -7,8 +7,6 @@ class NodeRepresentation {
     this.leds = Array(10).fill(Array(10).fill(0))
   }
 
-  update() { }
-
   draw() {
     const _drawLED = (x, y, val) => {
       const square = new paper.Shape.Rectangle(y * 10 + this.identity.self[1] * 11 * 10, x * 10 + this.identity.self[0] * 11 * 10, 9, 9)
@@ -17,19 +15,21 @@ class NodeRepresentation {
     this.leds.map((arr, x) => arr.map((val, y) => _drawLED(x, y, val)))
   }
 
+  update() { }
+
 }
 
 class Matrix {
 
   constructor() {
-    this.nodes = { }
+    this.nodes = {}
   }
 
   update(data) {
     if (data.type != 'update') return
     paper.project.clear()
 
-    if (!(data.id in this.nodes)) this.addNode(data)
+    if (!this.nodes.hasOwnProperty(data.id)) this.addNode(data)
     this.nodes[data.id].update(data)
     Object.values(this.nodes).map(node => node.draw())
 
@@ -37,8 +37,8 @@ class Matrix {
   }
 
   addNode(node) {
-    const behaviour = eval(node.implementation[0])
-    this.nodes[node.id] = new behaviour(node)
+    const implementation = eval(node.implementation[0])
+    this.nodes[node.id] = new implementation(node)
   }
 
 }

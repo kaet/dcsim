@@ -15,7 +15,6 @@ class Node {
 
   constructor(identity, server) {
     this.identity = identity
-    this.interval = 5000
     this.events = new EventEmitter
 
     this.log(`new ${this.constructor.name} node at ${identity.self}`)
@@ -23,7 +22,6 @@ class Node {
     this.io = io(server)
     this.io.on('connect', this._onConnect.bind(this))
     this.io.on('*', this._onReceive.bind(this))
-    this.io.on('disconnect', this._onDisconnect.bind(this))
   }
 
   log(msg) {
@@ -31,13 +29,11 @@ class Node {
   }
 
   send(type, data) {
-    const obj = Object.assign({ type }, data)
-    this.io.emit('*', obj)
+    this.io.emit('*', Object.assign({ type }, data))
   }
 
-  sendTo(type, data, unicast) {
-    const obj = Object.assign({ unicast }, data)
-    this.send(type, obj)
+  sendTo(unicast, type, data) {
+    this.send(type, Object.assign({ unicast }, data))
   }
 
   update() {
@@ -45,19 +41,11 @@ class Node {
   }
 
   _onConnect() {
-    this.log(`io connected`)
-    setInterval(this.update.bind(this), this.interval)
-  }
-
-  _onDisconnect() {
-    this.log(`io disconnected`)
+    setInterval(this.update.bind(this), 5000)
   }
 
   _onReceive(data) {
-    const unicast = data.unicast
-    if (!!unicast && `${unicast}` != `${this.identity.self}`) {
-      return
-    }
+    if (data.unicast && `${data.unicast}` != `${this.identity.self}`) return
     this.events.emit(data.type, data)
   }
 

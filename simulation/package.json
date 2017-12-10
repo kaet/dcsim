@@ -9,7 +9,6 @@
   "author": "Cyril M.",
   "license": "ISC",
   "dependencies": {
-    "colors": "^1.1.2",
     "socket.io": "^2.0.4"
   }
 }

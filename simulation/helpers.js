@@ -29,9 +29,8 @@ const generateRegularNodeList = (x, y, implementation) => {
     return { id, self, neighbours, implementation }
   }
 
-  return Array(x).fill(0)
-           .map((val, i) => Array(y).fill(0)
-             .map((val, j) =>_calculateNeighbours([i, j], i + j * x + 1)))
+  return Array(x).fill(0).map((val, i) => Array(y).fill(0)
+    .map((val, j) =>_calculateNeighbours([i, j], i + j * x + 1)))
 }
 
 module.exports = { generateRegularNodeList }
