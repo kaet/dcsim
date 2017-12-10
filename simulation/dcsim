@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+/**
+ * dcsim
+ *
+ * Parent process of the simulator. This file will load the configuration file
+ * passed to it, spawn the child processes and log messages from its children.
+ *
+ * Usage: $ ./dcsim <input_file.js>
+ */
+
+'use strict'
+
+const child_process = require('child_process')
+    , path = require('path')
+    , colors = require('colors')
+    , io = require('socket.io')(3008)
+
+io.on('connection', sock => sock.on('*', d => sock.broadcast.emit('*', d)))
+
+const config = require(path.resolve(process.argv.slice(2)[0]))
+const nodes = config.nodes
+
+console.log(`Creating ${nodes.length * nodes[0].length} nodes`.magenta)
+
+const fork = identity => {
+  const child = child_process.fork(path.resolve('child.js'))
+  child.send(identity)
+
+  child.on('message', msg => console.log(`#${identity.id}: ${msg}`.cyan))
+  child.on('close', code => console.log(`#${identity.id}: exit (${code})`.red))
+}
+nodes.map(arr => arr.map(fork))

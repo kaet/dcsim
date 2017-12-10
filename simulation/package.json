@@ -1,0 +1,15 @@
+{
+  "name": "dcsim",
+  "version": "1.0.0",
+  "description": "Decentralized Control Simulator",
+  "main": "supervisor",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cyril M.",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "socket.io": "^2.0.4"
+  }
+}
