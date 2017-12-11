@@ -1,5 +1,5 @@
 /**
- * CenterFade.js
+ * SimpleFade.js
  *
  * Basic example of a node implementation.
  */
@@ -9,7 +9,7 @@
 const Node = require('../node')
 const helpers = require('../helpers')
 
-class CenterFade extends Node {
+class SimpleFade extends Node {
 
   constructor() {
     super(...arguments)
@@ -19,6 +19,7 @@ class CenterFade extends Node {
     this.events.on('reset', this.onReset.bind(this))
     this.events.on('receive', this.onReceive.bind(this))
     this.events.on('spread', this.onSpread.bind(this))
+    this.events.on('send', this.onSend.bind(this))
   }
 
   onReceive(data) {
@@ -27,17 +28,23 @@ class CenterFade extends Node {
     this.update()
   }
 
+  onSend(data) {
+    this.identity.bank -= data.value
+    const obj = { unicast: data.target, value: data.value }
+    this.sendTo(data.target, 'receive', obj)
+    this.log(`sent ${data.target } ${data.value} currency`)
+    this.update()
+  }
+
   onReset(data) {
     this.identity.bank = 0
     this.log(`reset bank to 0`)
+    this.update()
   }
 
   onSpread(data) {
-    const _spread = () => {
-      const value = this.identity.bank / this.identity.neighbours.length + 1
-      this.sendTo(neighbour, 'receive', { value })
-    }
-    this.identity.neighbours.map(_spread)
+    const value = this.identity.bank / this.identity.neighbours.length
+    this.identity.neighbours.map(xy => this.sendTo(xy, 'receive', { value }))
     this.identity.bank = value
     this.update()
   }
@@ -45,6 +52,6 @@ class CenterFade extends Node {
 }
 
 module.exports = {
-  nodes: helpers.generateRegularNodeList(3, 3, ['CenterFade', __filename]),
-  CenterFade
+  nodes: helpers.generateRegularNodeList(5, 5, ['SimpleFade', __filename]),
+  SimpleFade
 }

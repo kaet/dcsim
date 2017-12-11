@@ -9,7 +9,13 @@ class NodeRepresentation {
 
   draw() {
     const _drawLED = (x, y, val) => {
-      const square = new paper.Shape.Rectangle(y * 10 + this.identity.self[1] * 11 * 10, x * 10 + this.identity.self[0] * 11 * 10, 9, 9)
+
+      const scale = 10
+      const square = new paper.Shape.Rectangle(
+        y * scale + this.identity.self[1] * (scale + 1) * scale,
+        x * scale + this.identity.self[0] * (scale + 1) * scale,
+        scale - 1, scale - 1)
+
       square.fillColor = `rgba(255,255,255,${val <= 0 ? 0.1 : val})`
     }
     this.leds.map((arr, x) => arr.map((val, y) => _drawLED(x, y, val)))

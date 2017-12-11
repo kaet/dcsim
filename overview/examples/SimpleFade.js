@@ -1,12 +1,12 @@
 /**
- * CenterFade.js
+ * SimpleFade.js
  *
  * Basic example of a node implementation.
  */
 
 'use strict'
 
-class CenterFade extends NodeRepresentation {
+class SimpleFade extends NodeRepresentation {
 
   update(data) {
     this.identity = data

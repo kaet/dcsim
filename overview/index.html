@@ -2,29 +2,77 @@
 <html>
   <head>
     <title>Decentralized Control Simulation</title>
+    <link rel="stylesheet" href="reset.css">
     <style>
       body {
         background: #1d272b;
       }
       canvas {
-        width: 650px;
+        float: left;
+        margin-right: 10px;
+      }
+      canvas, textarea {
+        width: 540px;
         height: 540px;
+        display: inline;
+        border: none;
+        outline: none;
+      }
+      div {
+        width: 600px;
+        float: left;
+        height: 300px;
+      }
+      textarea {
+        background: #353d40;
+        color: rgba(255,255,255,0.3);
+        padding: 10px;
+        height: 300px;
+        width: 600px;
+        margin-bottom: 10px;
+        font: 12px monospace;
+      }
+      button {
+        padding: 10px;
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color:rgba(255,255,255,0.3);
       }
     </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <div>
+    <textarea>
+//const obj = { type: 'spread', unicast: [1, 1] }
+//const obj = { type: 'reset' }
+//const obj = { type: 'receive', unicast: [1, 1], value: 80 }
+//const obj = { type: 'send', unicast: [1, 1], value: 40, target: [1, 2] }
+
+network.emit('*', obj)</textarea>
+    <button onClick="evalIsEvil()">Execute</button>
+    </div>
+
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 
     <script type="text/javascript" src="dcsim.js"></script>
-    <script type="text/javascript" src="examples/CenterFade.js"></script>
+    <script type="text/javascript" src="examples/SimpleFade.js"></script>
     <script type="text/javascript">
+      function evalIsEvil() {
+        const val = document.getElementsByTagName('textarea')[0].value
+        try {
+          eval(val)
+        } catch (err) {
+          alert('Failed to execute.')
+        }
+      }
       const canvas = document.getElementById('canvas')
       paper.setup(canvas)
       const matrix = new Matrix
-      const socket = io(`http://localhost:3008`)
-      socket.on('*', matrix.update.bind(matrix))
+      const network = io(`http://localhost:3008`)
+      network.on('*', matrix.update.bind(matrix))
       paper.view.draw()
     </script>
   </body>
